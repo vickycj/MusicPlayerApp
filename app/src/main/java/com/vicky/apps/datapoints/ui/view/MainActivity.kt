@@ -1,17 +1,23 @@
 package com.vicky.apps.datapoints.ui.view
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding3.widget.textChanges
+import com.vicky.apps.datapoints.R
 import com.vicky.apps.datapoints.base.BaseActivity
 import com.vicky.apps.datapoints.common.ViewModelProviderFactory
 import com.vicky.apps.datapoints.ui.adapter.DataAdapter
 import com.vicky.apps.datapoints.ui.viewmodel.ArtistsNameList
 import com.vicky.apps.datapoints.ui.viewmodel.MainViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -42,10 +48,14 @@ class MainActivity : BaseActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val data: List<ArtistsNameList.Data>? = ArrayList()
-        adapter = DataAdapter(ArtistsNameList(data, "", 300))
+        adapter = DataAdapter(getEmptyData())
 
         recyclerView.adapter = adapter
+    }
+
+    private fun getEmptyData(): ArtistsNameList {
+        val data: List<ArtistsNameList.Data>? = ArrayList()
+        return ArtistsNameList(data, "", 300)
     }
 
     private fun initializeValues() {
@@ -63,8 +73,32 @@ class MainActivity : BaseActivity() {
         })
 
 
+        var subscription = artistNameSearchBox.textChanges().debounce(400, TimeUnit.MILLISECONDS)
+            .map { it.toString() }
+            .skip(1)
+            .doOnNext {
+                indicatorText.text = getString(R.string.searching)
+                recyclerView.visibility = View.INVISIBLE
+            }
+            .filter { it.length > 2 }
+            .flatMap {
 
-        viewModel.getArtistNameList("em")
+                viewModel.generateArtistsListApiCall(it).subscribeOn(Schedulers.io())
+
+            }
+            .doOnEach {
+                indicatorText.text = getString(R.string.results)
+                recyclerView.visibility = View.VISIBLE
+            }
+            .doOnError { failureCallback() }
+            .retry()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                successCallback(it)
+            }
+
+        compositeDisposable.addAll(subscription)
+
     }
 
 

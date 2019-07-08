@@ -1,13 +1,11 @@
 package com.vicky.apps.datapoints.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vicky.apps.datapoints.common.SchedulerProvider
 import com.vicky.apps.datapoints.data.remote.Repository
-import io.reactivex.Single
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
 
 
 class MainViewModel(private val repository: Repository,
@@ -27,20 +25,9 @@ class MainViewModel(private val repository: Repository,
     }
 
 
-    fun getArtistNameList(name: String) {
-
-        compositeDisposable.add(generateArtistsListApiCall(name).subscribeBy(onSuccess = {
-            response.postValue(it)
-        }, onError = {
-            Log.d("valuessss",it.message)
-        } ))
-
-
-    }
-
-    fun generateArtistsListApiCall(name: String): Single<ArtistsNameList> {
+    fun generateArtistsListApiCall(name: String): Observable<ArtistsNameList> {
         return repository.getArtistsNameList(name)
-            .compose(schedulerProvider.getSchedulersForSingle())
+            .compose(schedulerProvider.getSchedulersForObservable<ArtistsNameList>())
     }
 
 

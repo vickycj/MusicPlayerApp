@@ -1,4 +1,6 @@
 <resources>
-    <string name="app_name">AlbumList</string>
+    <string name="app_name">Tidal</string>
     <string name="artist_name">Artist Name</string>
+    <string name="searching">Searching..</string>
+    <string name="results">Results Found..</string>
 </resources>

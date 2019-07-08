@@ -34,7 +34,6 @@ ext {
     compileSdkVersion = 28
     buildToolsVersion = "28.0.1"
     supportLibraryVersion = "28.0.1"
-
     architectureComponentsVersion = "1.0.0"
     daggerVersion = "2.15"
     retrofitVersion = "2.3.0"
@@ -44,7 +43,7 @@ ext {
     rxkotlinVersion = "2.1.0"
     gsonVersion = "2.8.0"
     lifecycle_version = "2.0.0"
-
+    rxBinding = "2.0.1"
     roomVersion = '2.1.0-alpha06'
     archLifecycleVersion = '2.1.0-alpha04'
     androidxArchVersion = '2.0.0'
