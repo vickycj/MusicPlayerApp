@@ -12,6 +12,7 @@ Tech Stack
 - Streams                 - **RxAndroid and LiveData**
 - Architecture Components - **ViewModel, LiveData, Android JetPAck Components**
 - Testing Framework       - **Junit, Mockito , Expresso, AndroidJunit4**
+- Text Changes            - **RxTextView**
 
 
 Theory
