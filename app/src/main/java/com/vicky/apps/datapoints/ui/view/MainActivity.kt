@@ -1,5 +1,6 @@
 package com.vicky.apps.datapoints.ui.view
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vicky.apps.datapoints.base.BaseActivity
 import com.vicky.apps.datapoints.common.ViewModelProviderFactory
 import com.vicky.apps.datapoints.ui.adapter.DataAdapter
+import com.vicky.apps.datapoints.ui.viewmodel.ArtistsNameList
 
 import com.vicky.apps.datapoints.ui.viewmodel.MainViewModel
 import javax.inject.Inject
@@ -30,7 +32,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(com.vicky.apps.datapoints.R.layout.activity_main)
       //  inilializingRecyclerView()
-        //initializeValues()
+        initializeValues()
 
     }
 
@@ -51,8 +53,8 @@ class MainActivity : BaseActivity() {
         viewModel.setCompositeData(compositeDisposable)
 
         viewModel.getSubscription().observe(this, Observer {
-            if(it){
-                successCallback()
+            if (it != null) {
+                successCallback(it)
             }else{
                 failureCallback()
             }
@@ -60,12 +62,14 @@ class MainActivity : BaseActivity() {
 
 
 
-        viewModel.getArtistNameList()
+        viewModel.getArtistNameList("em")
     }
 
 
-    private fun successCallback(){
-        updateData()
+    private fun successCallback(response: ArtistsNameList) {
+
+        Log.i("value", response.toString())
+        //updateData()
     }
 
     private fun updateData(){

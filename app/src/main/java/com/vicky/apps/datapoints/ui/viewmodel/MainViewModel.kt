@@ -15,11 +15,9 @@ class MainViewModel(private val repository: Repository,
 ):ViewModel() {
 
 
+    private val response: MutableLiveData<ArtistsNameList> = MutableLiveData()
 
-
-    private val response: MutableLiveData<Boolean> = MutableLiveData()
-
-    fun getSubscription():MutableLiveData<Boolean> = response
+    fun getSubscription(): MutableLiveData<ArtistsNameList> = response
 
     private lateinit var compositeDisposable: CompositeDisposable
 
@@ -32,7 +30,7 @@ class MainViewModel(private val repository: Repository,
     fun getArtistNameList(name: String) {
 
         compositeDisposable.add(generateArtistsListApiCall(name).subscribeBy(onSuccess = {
-            response.postValue(true)
+            response.postValue(it)
         }, onError = {
             Log.d("valuessss",it.message)
         } ))
