@@ -1,7 +1,6 @@
 package com.vicky.apps.datapoints.ui.view
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -73,26 +72,24 @@ class MainActivity : BaseActivity() {
         })
 
 
-        var subscription = artistNameSearchBox.textChanges().debounce(400, TimeUnit.MILLISECONDS)
-            .map { it.toString() }
+        var subscription = artistNameSearchBox.textChanges()
+
             .skip(1)
+            .map { it.toString() }
             .doOnNext {
                 indicatorText.text = getString(R.string.searching)
-                recyclerView.visibility = View.INVISIBLE
             }
+            .debounce(800, TimeUnit.MILLISECONDS)
             .filter { it.length > 2 }
             .flatMap {
-
                 viewModel.generateArtistsListApiCall(it).subscribeOn(Schedulers.io())
-
             }
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnEach {
                 indicatorText.text = getString(R.string.results)
-                recyclerView.visibility = View.VISIBLE
             }
             .doOnError { failureCallback() }
             .retry()
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 successCallback(it)
             }
