@@ -55,11 +55,11 @@ class MainViewModelTest {
     @Test
     fun getDataFromRemote() {
 
-        Mockito.`when`(repository.getDataFromApi()).thenReturn(Single.just(getObject()))
+        Mockito.`when`(repository.getArtistsNameList()).thenReturn(Single.just(getObject()))
 
         val testObserver = TestObserver<List<ResponseData>>()
 
-        viewModel.generateApiCall()
+        viewModel.generateArtistsListApiCall()
             .subscribe(testObserver)
 
         testObserver.assertNoErrors()

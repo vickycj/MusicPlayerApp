@@ -1,11 +1,13 @@
 package com.vicky.apps.datapoints.data.remote
 
 
+import com.vicky.apps.datapoints.ui.viewmodel.ArtistsNameList
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 
 interface ApiService {
-    @GET("")
-    fun getDataFromService(): Single<List<Any>>
+    @GET("https://api.deezer.com/search/artist")
+    fun getArtistsNameList(@Query("q") name: String): Single<ArtistsNameList>
 }

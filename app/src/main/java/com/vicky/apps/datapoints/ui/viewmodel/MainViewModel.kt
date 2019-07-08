@@ -24,18 +24,14 @@ class MainViewModel(private val repository: Repository,
     private lateinit var compositeDisposable: CompositeDisposable
 
 
-
-    private var ascendingVal:Boolean = false
-
     fun setCompositeData(compositeDisposable: CompositeDisposable) {
         this.compositeDisposable = compositeDisposable
     }
 
 
+    fun getArtistNameList(name: String) {
 
-    fun getDataFromRemote() {
-
-        compositeDisposable.add(generateApiCall().subscribeBy ( onSuccess = {
+        compositeDisposable.add(generateArtistsListApiCall(name).subscribeBy(onSuccess = {
             response.postValue(true)
         }, onError = {
             Log.d("valuessss",it.message)
@@ -43,8 +39,9 @@ class MainViewModel(private val repository: Repository,
 
 
     }
-    fun generateApiCall():Single<List<Any>>{
-        return repository.getDataFromApi()
+
+    fun generateArtistsListApiCall(name: String): Single<ArtistsNameList> {
+        return repository.getArtistsNameList(name)
             .compose(schedulerProvider.getSchedulersForSingle())
     }
 
