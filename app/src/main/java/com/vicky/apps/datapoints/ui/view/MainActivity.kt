@@ -1,17 +1,17 @@
 package com.vicky.apps.datapoints.ui.view
+
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vicky.apps.datapoints.base.BaseActivity
 import com.vicky.apps.datapoints.common.ViewModelProviderFactory
 import com.vicky.apps.datapoints.ui.adapter.DataAdapter
 import com.vicky.apps.datapoints.ui.viewmodel.ArtistsNameList
-
 import com.vicky.apps.datapoints.ui.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
@@ -31,17 +31,19 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.vicky.apps.datapoints.R.layout.activity_main)
-      //  inilializingRecyclerView()
+        inilializingRecyclerView()
         initializeValues()
 
     }
 
     private fun inilializingRecyclerView() {
 
-        recyclerView.layoutManager = GridLayoutManager(this, 3)
+        recyclerView = artistRecyclerView
 
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = DataAdapter()
+        val data: List<ArtistsNameList.Data>? = ArrayList()
+        adapter = DataAdapter(ArtistsNameList(data, "", 300))
 
         recyclerView.adapter = adapter
     }
@@ -67,13 +69,11 @@ class MainActivity : BaseActivity() {
 
 
     private fun successCallback(response: ArtistsNameList) {
-
-        Log.i("value", response.toString())
-        //updateData()
+        updateData(response)
     }
 
-    private fun updateData(){
-        adapter.updateData()
+    private fun updateData(response: ArtistsNameList) {
+        adapter.updateData(response)
     }
 
 
